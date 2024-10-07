@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 dotenv.config({});
 import connectDB from "./utils/dbConnection.js";
 import userRoute from './rotuers/userRoute.js';
+import postRoute from './rotuers/postRoute.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 ///Yaha pr apni api call aaynge
 app.use("/api/v1/user", userRoute)
+app.use("/api/v1/post", postRoute)
 
 
 app.get("/", (req, res) => {
