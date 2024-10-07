@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config({});
 import connectDB from "./utils/dbConnection.js";
+import userRoute from './rotuers/userRoute.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+///Yaha pr apni api call aaynge
+app.use("/api/v1/user", userRoute)
+
 
 app.get("/", (req, res) => {
   res.send("Hello World");
