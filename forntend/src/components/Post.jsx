@@ -81,7 +81,7 @@ const Post = () => {
       caption
     </p>
 
-    <span className="cursor-pointer"   onClick={(e) => setShowComment(true)}>View all 239 comments</span>
+    <span className="cursor-pointer text-sm text-gray-400 hover:text-gray-600 transition duration-200 ease-in-out"   onClick={(e) => setShowComment(true)}>View all 239 comments</span>
     <CommentDilog  showComment={showComment} setShowComment={setShowComment} />
 
 
