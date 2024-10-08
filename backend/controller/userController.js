@@ -1,10 +1,11 @@
 import { User } from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import dotenv from 'dotenv';
-dotenv.config({})
+import dotenv from "dotenv";
+dotenv.config({});
 import getDataUri from "../utils/dataUri.js";
 import cloudinary from "../utils/cloudinary.js";
+import { Post } from "../models/postModel.js";
 
 export const register = async (req, res) => {
   try {
@@ -40,12 +41,10 @@ export const register = async (req, res) => {
   }
 };
 
-
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Check if email or password is missing
     if (!email || !password) {
       return res.status(401).json({
@@ -72,6 +71,25 @@ export const login = async (req, res) => {
       });
     }
 
+    // Generate token
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    // Populate each Post in the user's post array
+    const populatedPosts = await Promise.all(
+      user.posts.map(async (postId) => {
+        const post = await Post.findById(postId);
+        if (post && post.author.equals(user._id)) {
+          return post;
+        }
+        return null; // Return null if the post is invalid
+      })
+    );
+
+    // Filter out null posts
+    const validPosts = populatedPosts.filter((post) => post !== null);
+
     // Construct a new user object (without password)
     const userData = {
       _id: user._id,
@@ -81,15 +99,8 @@ export const login = async (req, res) => {
       bio: user.bio,
       followers: user.followers,
       following: user.following,
-      posts: user.posts,
+      posts: validPosts, // Use the filtered posts
     };
-
-    
-
-    // Generate token
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1d",
-    });
 
     // Set token as a cookie and return user data
     return res
@@ -103,9 +114,12 @@ export const login = async (req, res) => {
         success: true,
         user: userData,
       });
-
   } catch (error) {
     console.log("Controller :: Login :: error", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
 
@@ -125,7 +139,6 @@ export const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
     let user = await User.findById(userId).select("-password");
-  
 
     return res.status(200).json({
       user,
@@ -138,17 +151,14 @@ export const getProfile = async (req, res) => {
 
 export const editProfile = async (req, res) => {
   try {
-    
     const userId = req.id;
     const { bio, gender } = req.body;
-    
+
     const profilePicture = req.file;
     let cloudResponse;
 
     // If profilePicture exists, upload it to Cloudinary
     if (profilePicture) {
-
-      
       const fileUri = getDataUri(profilePicture);
       cloudResponse = await cloudinary.uploader.upload(fileUri); // Use 'await' here
     }
@@ -185,10 +195,9 @@ export const editProfile = async (req, res) => {
   }
 };
 
-
 export const getSuggestedUser = async (req, res) => {
   try {
-    const suggestedUser =await User.find({ _id: { $ne: req.id } }).select(
+    const suggestedUser = await User.find({ _id: { $ne: req.id } }).select(
       "-password"
     );
     if (!suggestedUser) {
