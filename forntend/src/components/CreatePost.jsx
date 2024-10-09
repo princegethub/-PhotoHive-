@@ -8,22 +8,25 @@ import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "@/redux/postSlice";
+import store from "@/redux/store";
+import Posts from "./Posts";
 
 const CreatePost = ({ open, setOpen }) => {
+  const navigate = useNavigate();
   const imageRef = React.useRef();
   const [file, setFile] = React.useState("");
   const [caption, setCaption] = React.useState("");
   const [imagePreview, setImagePreview] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { user } = useSelector((store) => store.auth);
+  const { posts } = useSelector((store) => store.post);
 
   const createPostHandler = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const formData = new FormData();
       if (imagePreview) formData.append("image", file);
       if (caption) formData.append("caption", caption);
@@ -39,17 +42,18 @@ const CreatePost = ({ open, setOpen }) => {
       });
 
       if (res.data.success) {
-        // dispatch(setPosts((prev) => prev.push(res.data)))
-        navigate("/");
+        dispatch(setPosts([res.data.post, ...posts]));
         toast.success(res.data.message);
+        setOpen(false);
         setCaption(""); // Reset caption
-        setFile(null); // Optionally, reset the file input as well
+        setFile(""); // Optionally, reset the file input as well
+        setImagePreview("")
       }
     } catch (error) {
       console.log("CreatePost :: createPostHandler :: error", error);
       toast.error("Failed to create post. Please try again.");
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,12 +80,12 @@ const CreatePost = ({ open, setOpen }) => {
         <div className="flex flex-col gap-6">
           <div className="flex gap-3 items-center">
             <Avatar>
-              <AvatarImage src=""></AvatarImage>
+              <AvatarImage src={user?.profilePicture}></AvatarImage>
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="text-xs">
-              <h1 className="font-semibold text-gray-600">Username</h1>
-              <p className="text-gray-600">Bio here........</p>
+              <h1 className="font-semibold ">{user?.username}</h1>
+              <p className="text-gray-600">{user?.bio}</p>
             </div>
           </div>
           <Textarea
@@ -118,9 +122,11 @@ const CreatePost = ({ open, setOpen }) => {
 
           {imagePreview &&
             (loading ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-2">
-                Please Wait
-              </Loader2>
+              <Button>
+                {" "}
+                <Loader2 className="w-4 h-4 animate-spin mr-2"></Loader2>
+                Posting...
+              </Button>
             ) : (
               <Button onClick={createPostHandler}>Post</Button>
             ))}
