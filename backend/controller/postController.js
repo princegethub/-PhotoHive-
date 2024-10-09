@@ -64,7 +64,8 @@ export const getAllPost = async (req, res) => {
           select: "username profilePicture",
         },
       });
-
+      
+      
     return res.status(200).json({
       posts,
       success: true,
@@ -105,53 +106,54 @@ export const getUserPost = async (req, res) => {
 
 export const likePost = async (req, res) => {
   try {
-    const likeKarneWalaUserkiId = req.id;
-    const postId = req.params.id;
+    const likeKarneWalaUserkiId = req.id; // ID of the user who likes the post
+    const postId = req.params.id; // ID of the post being liked
     const post = await Post.findById(postId);
-    if (!post)
-      return res
-        .status(404)
-        .json({ message: "post not found", success: false });
 
-    await post.updateOne({ $addToSet: { likes: likeKarneWalaUserkiId } });
-    await post.save();
+    if (!post) {
+      return res.status(404).json({ message: "Post not found", success: false });
+    }
 
-    //implementing socket io for real time notification
+    // Add the user's ID to the `likes` array if it's not already present
+    await Post.updateOne({ _id: postId }, { $addToSet: { likes: likeKarneWalaUserkiId } });
+
+    // Implementing socket.io for real-time notification here if needed
 
     return res.status(200).json({ message: "Post liked", success: true });
   } catch (error) {
     console.log("PostController :: likePost :: Error", error);
+    return res.status(500).json({ message: "Server error", success: false });
   }
 };
+
 
 export const dislikePost = async (req, res) => {
   try {
-    const dislikeKarneWalaUserkiId = req.id;
-    const postId = req.params.id;
-    console.log('postId: ', postId);
+    const dislikeKarneWalaUserkiId = req.id; // ID of the user who dislikes the post
+    const postId = req.params.id; // ID of the post being disliked
 
     const post = await Post.findById(postId);
-    if (!post)
-      return res
-        .status(404)
-        .json({ message: "Post not found", success: false });
 
-    await Post.updateOne({ $pull: { likes: dislikeKarneWalaUserkiId } });
-    await post.save();
+    if (!post) {
+      return res.status(404).json({ message: "Post not found", success: false });
+    }
 
-    return res.status(200).json({ message: "Post Disliked", success: true });
+    // Remove the user's ID from the `likes` array
+    await Post.updateOne({ _id: postId }, { $pull: { likes: dislikeKarneWalaUserkiId } });
+
+    return res.status(200).json({ message: "Post disliked", success: true });
   } catch (error) {
     console.log("PostController :: dislikePost :: Error", error);
+    return res.status(500).json({ message: "Server error", success: false });
   }
 };
+
 
 export const addComment = async (req, res) => {
   try {
     const commentKarneWaleKiId = req.id; // ID of the user adding the comment
     const postId = req.params.id; // ID of the post to add the comment to
     const { text } = req.body;
-    console.log('text: ', text);
-
     if (!text) {
       return res.status(401).json({ message: "Comment Required", success: false });
     }
@@ -176,7 +178,7 @@ export const addComment = async (req, res) => {
     post.comments.push(comment._id); // Correctly pushing the comment to the post's comments array
     await post.save();
 
-    return res.status(200).json({ message: "Comment Added", success: true });
+    return res.status(200).json({ message: "Comment Added",comment, success: true });
   } catch (error) {
     console.log("PostController :: addComment :: Error", error);
     return res.status(500).json({ message: "Error adding comment", success: false });

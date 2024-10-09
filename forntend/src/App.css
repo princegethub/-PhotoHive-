@@ -1,0 +1,29 @@
+/* Add this CSS in a CSS file or in a style tag in your component */
+.scrollable {
+  
+  overflow-y: auto; /* Enable vertical scrolling */
+  
+}
+
+/* Custom scrollbar styles */
+.scrollable::-webkit-scrollbar {
+  border-radius: 10px;
+  width: 3px; /* Width of the scrollbar */
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent; /* Background of the track */
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: rgb(188, 186, 186); /* Gradient color for the scrollbar */
+  border-radius: 10px; /* Round edges */
+}
+
+/* For Firefox */
+.scrollable {
+  border-radius: 10px;
+
+  scrollbar-width: thin; /* Set scrollbar width for Firefox */
+  scrollbar-color: rgb(255, 254, 254) transparent; /* Thumb color and track color */
+}
