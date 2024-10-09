@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import CommentDilog from "./CommentDilog";
 import { Input } from "./ui/input";
 
-const Post = () => {
+const Post = ({post}) => {
   const [input, setInput] =  React.useState("");
   const [showComment, setShowComment] = React.useState(false);
   const changeEventHandler =  (e) => {
@@ -59,7 +59,7 @@ const Post = () => {
       </div>
       <img
         className="my-2 aspect-square w-full object-cover"
-        src="https://i.etsystatic.com/45557286/r/il/46408b/5192627263/il_794xN.5192627263_o2x1.jpg"
+        src={post.image}
         alt="post_img"
       />
 
