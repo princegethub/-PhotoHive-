@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import store from "@/redux/store";
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { Badge } from "./ui/badge";
 
@@ -141,16 +141,21 @@ const Post = ({ post }) => {
   };
 
   return (
-    <div className="my-8 w-full mx-auto max-w-sm">
+    <div className="my-8 w-full mx-auto max-w-sm ">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
+        <Link to={`/profile/${post.author?._id}`}>
           <Avatar>
             <AvatarImage src={post.author?.profilePicture} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
+          </Link>
           <div className="text-md flex gap-2  items-center font-semibold">
-            <h1 className="h-full -mt-1">{post.author.username}</h1>
+          <Link to={`/profile/${post.author?._id}`}>
 
+
+            <h1 className="h-full -mt-1">{post.author.username}</h1>
+        </Link>
             {user?._id === post?.author?._id && (
               <Badge variant="outline">Author</Badge>
             )}

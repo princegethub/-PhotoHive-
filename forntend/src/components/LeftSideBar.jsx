@@ -50,7 +50,12 @@ const LeftSideBar = () => {
         logoutHandler();
       } else if (typeText === "Create") {
         setOpen(true);
+      } else if( typeText === 'Profile'){
+        navigate(`/profile/${user?._id}`)
+      } else if( typeText === 'Home'){
+        navigate(`/`)
       }
+      
     } catch (error) {
       console.log("LeftSideBar :: sideHandler :: error", error);
     }

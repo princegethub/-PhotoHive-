@@ -123,7 +123,6 @@ export const login = async (req, res) => {
   }
 };
 
-
 export const logout = async (req, res) => {
   try {
     return res.cookie("token", "", { maxAge: 0 }).json({
@@ -138,7 +137,13 @@ export const logout = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
-    let user = await User.findById(userId).select("-password");
+    let user = await User.findById(userId)
+      .populate({
+        path: "posts",
+        options: { sort: { createdAt: -1 } }, // Sorting posts by createdAt in descending order
+      })
+      .populate({ path: "bookMarks" })
+      .select("-password");
 
     return res.status(200).json({
       user,
@@ -146,6 +151,7 @@ export const getProfile = async (req, res) => {
     });
   } catch (error) {
     console.log("Controller :: GetProfile :: error", error);
+    return res.status(500).json({ error: "Server error" }); // Optional: Return error response
   }
 };
 
