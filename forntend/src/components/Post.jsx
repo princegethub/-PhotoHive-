@@ -140,6 +140,7 @@ const Post = ({ post }) => {
     }
   };
 
+
   return (
     <div className="my-8 w-full mx-auto max-w-sm ">
       <div className="flex justify-between items-center">
@@ -189,7 +190,7 @@ const Post = ({ post }) => {
       </div>
       <img
         className="my-2 aspect-square w-full object-cover"
-        src={post.image}
+        src={post.image}      
         alt="post_img"
       />
 
@@ -237,6 +238,8 @@ const Post = ({ post }) => {
           View all {comment?.length} comments
         </span>
       )}
+
+  
 
       <CommentDilog showComment={showComment} setShowComment={setShowComment} />
 
