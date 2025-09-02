@@ -9,6 +9,7 @@ services:
       - "5000:5000"
     depends_on:
       - frontend
+      - mongo
     networks:
       - app-network
 
@@ -19,6 +20,36 @@ services:
       - "80:80"
     networks:
       - app-network
+
+  mongo:
+    image: mongo:6.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_SERVER: mongo
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
 
 networks:
   app-network:
