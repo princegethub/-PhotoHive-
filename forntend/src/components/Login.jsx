@@ -14,7 +14,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [loading , setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -35,22 +35,21 @@ const Login = () => {
         withCredentials: true,
       });
       if (res.data.success) {
-        dispatch(setAtuhUser(res.data.user))
-        navigate("/")
+        dispatch(setAtuhUser(res.data.user));
+        navigate("/");
         toast.success(res.data.message);
         setInput({
           email: "",
           password: "",
-        })
+        });
       }
     } catch (error) {
       console.log("Login :: submitHandler :: Error : ", error);
       toast.error(error.response.data.message);
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center h-screen w-full bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500">
@@ -60,13 +59,10 @@ const Login = () => {
       >
         <div className="flex flex-col justify-center gap-5">
           <div className="text-center">
-            <h2 className="text-4xl font-bold opacity-80 mb-2">Instagram</h2>
-            <p className="text-sm text-gray-600">
-              Login  to your account
-
-            </p>
+            <h2 className="text-4xl font-bold opacity-80 mb-2">PhotoHive</h2>
+            <p className="text-sm text-gray-600">Login to your account</p>
           </div>
-      
+
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -103,11 +99,17 @@ const Login = () => {
                 loading ? "opacity-70" : ""
               }`}
               disabled={loading}
-            >Login</Button>
-
+            >
+              Login
+            </Button>
           )}
 
-          <span className=" text-center">Don't have an account ? <Link to='/signup' className="text-blue-600 text-center">Sign up</Link></span>
+          <span className=" text-center">
+            Don't have an account ?{" "}
+            <Link to="/signup" className="text-blue-600 text-center">
+              Sign up
+            </Link>
+          </span>
         </div>
       </form>
     </div>

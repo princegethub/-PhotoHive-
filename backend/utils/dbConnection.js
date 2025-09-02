@@ -7,16 +7,19 @@ import mongoose from "mongoose";
 //   } catch (error) {
 //     console.log("Database  Connection Failed", error);
 //   }
-// };
+// // };
+// if (!process.env.DATABASE_URL) {
+//   console.error("DATABASE_URL is not defined in the environment variables.");
+//   process.exit(1);
+// }
 
-const connectDB = async() => {
+const connectDB = async () => {
   try {
-      await mongoose.connect("mongodb://localhost:27017/instagramClone_yt")
-      console.log("DAta base connected");
-      
+    await mongoose.connect("mongodb://localhost:27017/instagramClone_yt");
+    console.log("DAta base connected");
   } catch (error) {
     console.log("Database  Connection Failed", error);
   }
-}
+};
 
-export  default connectDB;
+export default connectDB;

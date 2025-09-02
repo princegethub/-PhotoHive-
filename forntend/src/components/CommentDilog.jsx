@@ -36,7 +36,7 @@ const CommentDialog = ({ showComment, setShowComment }) => {
   const submitHandler = async () => {
     try {
       const res = await axios({
-        url: `/api/v1/post/${selectedPost._id}/comment`,
+        url: `/api/v1/post/${selectedPost?._id}/comment`,
         method: "POST",
         data: { text: input },
         withCredentials: true,
@@ -88,7 +88,7 @@ const CommentDialog = ({ showComment, setShowComment }) => {
         <div className="flex w-full object-cover items-center justify-between flex-1">
           <div className="w-1/2 h-[510px]">
             <img
-              src={selectedPost.image}
+              src={selectedPost?.image}
               alt="post_img"
               className="w-full h-full object-cover rounded-l-lg"
             />
@@ -99,11 +99,11 @@ const CommentDialog = ({ showComment, setShowComment }) => {
             <div className="flex items-center justify-between py-3 border-b border-gray-400">
               <div className="flex items-center w-1/2 justify-start">
                 <Avatar>
-                  <AvatarImage src={selectedPost.author?.profilePicture} />
+                  <AvatarImage src={selectedPost?.author?.profilePicture} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <span className="font-semibold text-xs ml-2">
-                  {selectedPost.author?.username}
+                  {selectedPost?.author?.username}
                 </span>
               </div>
               <div>

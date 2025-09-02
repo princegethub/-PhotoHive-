@@ -50,12 +50,11 @@ const LeftSideBar = () => {
         logoutHandler();
       } else if (typeText === "Create") {
         setOpen(true);
-      } else if( typeText === 'Profile'){
-        navigate(`/profile/${user?._id}`)
-      } else if( typeText === 'Home'){
-        navigate(`/`)
+      } else if (typeText === "Profile") {
+        navigate(`/profile/${user?._id}`);
+      } else if (typeText === "Home") {
+        navigate(`/`);
       }
-      
     } catch (error) {
       console.log("LeftSideBar :: sideHandler :: error", error);
     }
@@ -83,7 +82,7 @@ const LeftSideBar = () => {
 
   return (
     <div className="w-[16%] border-r border-gray-300 h-screen flex flex-col   py-11 px-5 fixed top-0 z-10 ">
-      <h2 className="text-sm pl-2 font-semibold  md:text-2xl">Instagram</h2>
+      <h2 className="text-sm pl-2 font-semibold  md:text-2xl">PhotoHive🌟</h2>
       <div className="flex flex-col gap-2  mt-8">
         {sidebarItems.map((item, index) => (
           <div
@@ -96,7 +95,7 @@ const LeftSideBar = () => {
           </div>
         ))}
       </div>
-      <CreatePost open={open} setOpen={setOpen}/>
+      <CreatePost open={open} setOpen={setOpen} />
     </div>
   );
 };
