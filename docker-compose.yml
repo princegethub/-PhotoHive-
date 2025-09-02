@@ -12,6 +12,8 @@ services:
       - mongo
     networks:
       - app-network
+    environment:
+      - MONGO_URI=mongodb://admin:admin@mongo:27017/instagram?authSource=admin
 
   frontend:
     image: princegethub/instagram-frontend:latest
@@ -27,6 +29,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+
     ports:
       - "27017:27017"
     volumes:
