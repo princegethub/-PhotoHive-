@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config({});
 
 // const connectDB = async () => {
 //   try {
@@ -7,11 +9,8 @@ import mongoose from "mongoose";
 //   } catch (error) {
 //     console.log("Database  Connection Failed", error);
 //   }
-// // };
-// if (!process.env.DATABASE_URL) {
-//   console.error("DATABASE_URL is not defined in the environment variables.");
-//   process.exit(1);
-// }
+// };
+
 
 const connectDB = async () => {
   try {
