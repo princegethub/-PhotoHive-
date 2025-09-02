@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  backend:
+    image: princegethub/instagram-backend:latest
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - frontend
+    networks:
+      - app-network
+
+  frontend:
+    image: princegethub/instagram-frontend:latest
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
