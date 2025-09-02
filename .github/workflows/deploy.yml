@@ -16,6 +16,20 @@ jobs:
       FRONTEND_IMAGE: princegethub/instagram-frontend:latest
 
     steps:
+      - name: Check required secrets
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] || \
+             [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ] || \
+             [ -z "${{ secrets.SERVER_HOST }}" ] || \
+             [ -z "${{ secrets.SERVER_USER }}" ] || \
+             [ -z "${{ secrets.SERVER_SSH_KEY }}" ] || \
+             [ -z "${{ secrets.SERVER_PORT }}" ]; then
+            echo "❌ Missing required secrets. Exiting..."
+            exit 1
+          else
+            echo "✅ All required secrets are present. Continuing..."
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v3
 
