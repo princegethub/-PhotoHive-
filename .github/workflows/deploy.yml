@@ -57,6 +57,13 @@ jobs:
           file: ./forntend/Dockerfile
           push: true
           tags: ${{ env.FRONTEND_IMAGE }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Deploy via SSH and Docker Compose
         uses: appleboy/ssh-action@v1.0.3
@@ -66,6 +73,11 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /home/ubuntu/instagram-clone
+            set -e
+            echo "🔍 Debug: Connected to server successfully"
+            cd /home/ubuntu/instagram-clone || exit 1
+            echo "📦 Pulling latest Docker images..."
             docker-compose pull
+            echo "🚀 Starting services..."
             docker-compose up -d --remove-orphans
+            echo "✅ Deployment completed"
